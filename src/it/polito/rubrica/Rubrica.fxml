@@ -8,8 +8,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.BorderPane?>
 
-
-<BorderPane prefHeight="290.0" prefWidth="371.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8" fx:controller="it.polito.rubrica.RubricaController">
+<BorderPane prefHeight="340.0" prefWidth="371.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polito.rubrica.RubricaController">
    <top>
       <HBox alignment="TOP_CENTER" prefHeight="48.0" prefWidth="371.0" BorderPane.alignment="CENTER">
          <children>
@@ -50,9 +49,9 @@
       </GridPane>
    </center>
    <bottom>
-      <HBox prefHeight="47.0" prefWidth="351.0" BorderPane.alignment="CENTER">
+      <HBox prefHeight="108.0" prefWidth="351.0" BorderPane.alignment="CENTER">
          <children>
-            <TextArea fx:id="textResult" editable="false" prefHeight="79.0" prefWidth="351.0" />
+            <TextArea fx:id="textResult" editable="false" prefHeight="70.0" prefWidth="351.0" />
          </children>
       </HBox>
    </bottom>
