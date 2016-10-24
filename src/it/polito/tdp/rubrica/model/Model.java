@@ -47,21 +47,63 @@ public class Model {
 	 * 
 	 */
 	public Voce findVoceByNome(String nome){
-		for(int i=0; i<voci.size();++i){
-			if(voci.get(i).getNome().equals(nome)){
-				  
-				return voci.get(i);
-			}
-		}
 		
-		return null;
+		Voce v= this.binarySearch(nome, voci.size());
+		
+		
+		return v;
+		
+		
+	}
+
+	/**
+	 * Cancella un elemento esistente controlla prima se non c'è ritorna {@code false} 
+	 * 
+	 * @param nome il parametro tipo {@code String} da cancellare
+	 * @return {@code true} se cancella {@link Voce } 
+	 */
+	public boolean cancellaVoce(String nome){
+		Voce v= this.binarySearch(nome, voci.size());
+		
+		if(v==null){
+			return false;
+			
+		}
+		else
+			this.voci.remove(v);
+			return true;
 		
 		
 	}
 
 	
 	
-
+	private Voce binarySearch (String nome, int size){
+		int inizio =0;
+		int fine = voci.size();
+		
+		while(inizio!=fine){
+			int medio = inizio+(fine-inizio)/2;
+			
+			if(nome.compareToIgnoreCase(voci.get(medio).getNome())==0){
+				return voci.get(medio);
+				
+			}
+			else if(nome.compareToIgnoreCase(voci.get(medio).getNome())>0){
+				
+				inizio=medio+1;
+			}
+			else{
+				
+				inizio=medio;
+			}
+			
+			
+		}
+		
+		return null;
+		
+	}
 	
 	
 	
