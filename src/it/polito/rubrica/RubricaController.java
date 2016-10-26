@@ -3,18 +3,44 @@ package it.polito.rubrica;
 
 
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import it.polito.tdp.rubrica.model.Model;
 import it.polito.tdp.rubrica.model.Voce;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
-import javafx.scene.control.TextArea;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
+
 import javafx.scene.control.TextField;
 
 public class RubricaController {
 	private Model model;
+	private Map<String, String>countries;
+	private List<Voce>voci= new ArrayList<>();
+	
+	  @FXML
+	    private Label textStato;
+	  
+	  @FXML
+	    private ComboBox<String> comboPrefisso;
+	  
+	  
+	  @FXML
+	    private Button btnCancella;
+	  
+	  @FXML
+	    private Label labelPrefix;
+
+	    
+
 
     @FXML
     private ResourceBundle resources;
@@ -23,8 +49,9 @@ public class RubricaController {
     private URL location;
 
     @FXML
-    private TextArea textResult;
+    private ComboBox<Voce> comboNome;
 
+   
     @FXML
     private TextField TextTelefono;
 
@@ -40,96 +67,160 @@ public class RubricaController {
     @FXML
     private TextField textNome;
 
+    private boolean validateEmail(String email){
+    	Pattern p = Pattern.compile("^[A-Za-z0-9+_.-]+@(.+)$");
+    	Matcher m = p.matcher(email);
+
+    	if (m.find())
+    	   return true;
+    	else 
+    		return false;
+    	
+    }
     
-    
-    private void dataInputControl(){
+    private boolean dataInputControl(){
+    	this.textStato.setStyle("-fx-text-fill: red;");
     	String nome = this.textNome.getText().toLowerCase().trim();
     	String email= this.textEmail.getText().trim().toLowerCase();
     	String telefono=this.TextTelefono.getText().trim().toLowerCase();
-    	if(this.textNome==null || this.textNome.getLength()==0){
-    	this.textResult.setStyle("-fx-text-fill: red;");
-    		this.textResult.appendText("Inserire il nome \n");
+    	
+    	if(nome==null || nome.length()==0){
+    		
+    		this.textStato.setText("Inserire il nome \n");
+    		return true;
+    		
     		
     	}
-    	 if(this.textEmail==null || this.textEmail.getLength()==0){
-        	this.textResult.setStyle("-fx-text-fill: red;");
-        		this.textResult.appendText("Inserire L'Email \n");
+    	else if(email==null || email.length()==0){
+    
+        		this.textStato.setText("Inserire L'Email \n");
+        		return true;
         		
         	}
-    	 if(this.TextTelefono==null || this.TextTelefono.getLength()==0){
-    	this.textResult.setStyle("-fx-text-fill: red;");
-    		this.textResult.appendText("Inserire il numero telefono \n");
+    	else if(this.validateEmail(email)==false){
+        	
+        		this.textStato.setText("Email non valido\n");
+        		return true;
+    	}
+    	else if(telefono==null || telefono.length()==0){
+    	
+    		this.textStato.setText("Inserire il numero telefono \n");
+    		return true;
     	}
     	
-    	return;
+    	
+    	else if(this.comboPrefisso.getValue()==null){
+    		this.textStato.setText("Scegliere il suo paese \n");
+    		return true;
+    	
+    	}
+    	
+    	else{
+    		return false;
+    	}
+    
     
     }
     
-    
-    
+
+       
     
     
     @FXML
     void doCerca(ActionEvent event) {
-    	this.textResult.clear();
+    	this.textEmail.clear();
+    	//this.textEmail.clear();
+    	this.TextTelefono.clear();
     	
-    	if(this.textNome==null || this.textNome.getLength()==0){
-        	this.textResult.setStyle("-fx-text-fill: red;");
-        		this.textResult.appendText("Inserire il nome \n");
-        		return;
-        		
-        	}
-    	Voce v=model.findVoceByNome(this.textNome.getText());
+    
+    	Voce v=model.findVoceByNome(this.comboNome.getValue().getNome());
     	
-    	if(v !=null){
-    		this.textResult.setStyle("-fx-text-fill: green;");
-    		this.textResult.appendText("Trovato\n");
+    	
+    		this.textStato.setStyle("-fx-text-fill: green;");
+    		this.textStato.setText("Trovato\n");
     		//this.textResult.setStyle("-fx-text-fill: black;");
-    		this.textResult.appendText(v.getNome()+"\n"+v.getEmail()+"\n"+v.getTelefono());
+    		//da completare
+    		this.textEmail.appendText(v.getEmail());
+    		this.TextTelefono.appendText(v.getTelefono());
     		return;
     		
     		
-    	}
-    	else{
-    		
-    		this.textResult.setStyle("-fx-text-fill: red;");
-    		this.textResult.appendText(String.format("Non esiste un il nome %s nella rubrica", this.textNome.getText()));
-    	}
+    	
 
     }
 
     @FXML
     void doInsert(ActionEvent event) {
-    	this.textResult.clear();
-    	this.dataInputControl();
+    	//this.textResult.clear();
+    	int telefono;
+    	boolean errore =dataInputControl();
     	
-    	Voce v= new Voce(this.textNome.getText(), this.textEmail.getText(), this.TextTelefono.getText());
+    	if(errore ==false){
+    		try{
+        		telefono =Integer.valueOf(this.TextTelefono.getText());
+        		
+        	}
+        	catch(NumberFormatException nfe){
+        		this.textStato.setStyle("-fx-text-fill: red;");
+        		this.textStato.setText("Errore Inserire solo ciffre \n");
+        		return ;
+        	}
+    	Voce v= new Voce(this.textNome.getText(), this.textEmail.getText(), 
+    			String.valueOf(countries.get(this.comboPrefisso.getValue())+telefono));
     	
     	boolean insert=model.addVoce(v);
     	
     	if (insert){
-    		this.textResult.setStyle("-fx-text-fill: green;");
-    		this.textResult.appendText("Inserito \n");
+    		this.textStato.setStyle("-fx-text-fill: green;");
+    		this.textStato.setText("Inserito \n");
+    	     voci.add(v);
+    		Collections.sort(voci);
+    		comboNome.getItems().clear();
+    		this.comboNome.getItems().addAll(voci);
+    		
     		return; 
     	}
     	else{
-    		this.textResult.setStyle("-fx-text-fill: red;");
-    		this.textResult.appendText("Già presente \n");
+    		this.textStato.setStyle("-fx-text-fill: red;");
+    		this.textStato.setText("Già presente \n");
     		return; 
+    	}
+    	}
+    	else{
+    		return;
+    	}
+
+    }
+    
+    
+    
+    
+    @FXML
+    void doCancella(ActionEvent event) {
+
+    }
+
+    @FXML
+    void doChoosePrefix(ActionEvent event) {
+    	this.TextTelefono.clear();
+    	String prefix = this.comboPrefisso.getValue();
+    	if(prefix!=null){
+    		this.labelPrefix.setText(countries.get(prefix));
     	}
 
     }
 
-   
-
     @FXML
     void initialize() {
-        assert textResult != null : "fx:id=\"textResult\" was not injected: check your FXML file 'Rubrica.fxml'.";
+        assert textStato != null : "fx:id=\"textStato\" was not injected: check your FXML file 'Rubrica.fxml'.";
+        assert btnCancella != null : "fx:id=\"btnCancella\" was not injected: check your FXML file 'Rubrica.fxml'.";
+        assert labelPrefix != null : "fx:id=\"labelPrefix\" was not injected: check your FXML file 'Rubrica.fxml'.";
         assert TextTelefono != null : "fx:id=\"TextTelefono\" was not injected: check your FXML file 'Rubrica.fxml'.";
-        assert btnCerca != null : "fx:id=\"btnCerca\" was not injected: check your FXML file 'Rubrica.fxml'.";
         assert btnInsert != null : "fx:id=\"btnInsert\" was not injected: check your FXML file 'Rubrica.fxml'.";
         assert textEmail != null : "fx:id=\"textEmail\" was not injected: check your FXML file 'Rubrica.fxml'.";
+        assert comboNome != null : "fx:id=\"comboNome\" was not injected: check your FXML file 'Rubrica.fxml'.";
         assert textNome != null : "fx:id=\"textNome\" was not injected: check your FXML file 'Rubrica.fxml'.";
+        assert comboPrefisso != null : "fx:id=\"comboPrefisso\" was not injected: check your FXML file 'Rubrica.fxml'.";
 
     }
 /**
@@ -140,6 +231,10 @@ public class RubricaController {
  */
 	public void setModel(Model model) {
 		this.model=model;
+		countries=model.getAllCountries();
+	
+		this.comboPrefisso.getItems().addAll(countries.keySet());
+		
 	}
 }
 
