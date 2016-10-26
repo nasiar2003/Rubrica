@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.effect.*?>
 <?import javafx.scene.text.*?>
 <?import javafx.scene.paint.*?>
 <?import javafx.geometry.*?>
@@ -8,7 +9,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.BorderPane?>
 
-<BorderPane prefHeight="340.0" prefWidth="371.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polito.rubrica.RubricaController">
+<BorderPane prefHeight="300.0" prefWidth="544.0" style="-fx-background-color: black;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polito.rubrica.RubricaController">
    <top>
       <HBox alignment="TOP_CENTER" prefHeight="48.0" prefWidth="371.0" BorderPane.alignment="CENTER">
          <children>
@@ -24,35 +25,80 @@
       <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
    </padding>
    <center>
-      <GridPane alignment="CENTER" hgap="10.0" vgap="5.0" BorderPane.alignment="CENTER">
+      <GridPane alignment="CENTER" hgap="10.0" prefHeight="198.0" prefWidth="493.0" vgap="5.0" BorderPane.alignment="CENTER">
         <columnConstraints>
-          <ColumnConstraints hgrow="SOMETIMES" />
-          <ColumnConstraints hgrow="SOMETIMES" />
-            <ColumnConstraints hgrow="SOMETIMES" />
+          <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="52.0" minWidth="45.0" prefWidth="52.0" />
+            <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" maxWidth="199.0" minWidth="10.0" prefWidth="135.0" />
+            <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" maxWidth="199.0" minWidth="10.0" prefWidth="38.0" />
+          <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" maxWidth="343.0" minWidth="94.0" prefWidth="191.0" />
+            <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" maxWidth="192.0" minWidth="40.0" prefWidth="86.0" />
         </columnConstraints>
         <rowConstraints>
-          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints vgrow="SOMETIMES" />
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <Label text="Nome " />
-            <Label text="Email" GridPane.rowIndex="1" />
-            <TextField fx:id="textNome" GridPane.columnIndex="1" />
-            <TextField fx:id="textEmail" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-            <Button fx:id="btnCerca" mnemonicParsing="false" onAction="#doCerca" text="Cerca" GridPane.columnIndex="2" />
-            <Button fx:id="btnInsert" mnemonicParsing="false" onAction="#doInsert" text="Inserisci" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-            <Label text="Telefono" GridPane.rowIndex="2" />
-            <TextField fx:id="TextTelefono" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <Label text="Nome " textFill="#fcf7f7" GridPane.rowIndex="1" />
+            <Label text="Email" textFill="#f8f8f8" GridPane.rowIndex="2" />
+            <TextField fx:id="textNome" promptText="inserire il Nome e Cognome" GridPane.columnIndex="3" GridPane.rowIndex="1">
+               <effect>
+                  <Glow />
+               </effect></TextField>
+            <TextField fx:id="textEmail" promptText="xxxxx@xxxx.xxx" GridPane.columnIndex="3" GridPane.rowIndex="2">
+               <effect>
+                  <Glow />
+               </effect></TextField>
+            <Button fx:id="btnInsert" mnemonicParsing="false" onAction="#doInsert" style="-fx-background-color: green;" text="Inserisci" textFill="#f8f5f5" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+            <Label text="Telefono" textFill="#fcfafa" GridPane.rowIndex="3" />
+            <TextField fx:id="TextTelefono" prefHeight="25.0" prefWidth="87.0" promptText="inserire numero telefono" GridPane.columnIndex="3" GridPane.rowIndex="3">
+               <effect>
+                  <Glow />
+               </effect></TextField>
+            <ComboBox fx:id="comboNome" onAction="#doCerca" prefHeight="25.0" prefWidth="179.0" promptText="Rubrica Nome " style="-fx-background-color: yellow;" GridPane.columnIndex="3">
+               <effect>
+                  <Lighting>
+                     <bumpInput>
+                        <Shadow />
+                     </bumpInput>
+                     <light>
+                        <Light.Distant />
+                     </light>
+                  </Lighting>
+               </effect>
+            </ComboBox>
+            <Button fx:id="btnCancella" mnemonicParsing="false" onAction="#doCancella" style="-fx-background-color: red;" text="Cancella" textFill="#f5f3f3" GridPane.columnIndex="4" GridPane.rowIndex="4" />
+            <ComboBox fx:id="comboPrefisso" onAction="#doChoosePrefix" prefHeight="25.0" prefWidth="137.0" promptText="Prefisso" style="-fx-background-color: yellow;" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+            <Label fx:id="labelPrefix" textFill="#fcf9f9" GridPane.columnIndex="2" GridPane.rowIndex="3" />
          </children>
       </GridPane>
    </center>
    <bottom>
-      <HBox prefHeight="108.0" prefWidth="351.0" BorderPane.alignment="CENTER">
+      <HBox prefHeight="34.0" prefWidth="351.0" spacing="5.0" BorderPane.alignment="CENTER">
          <children>
-            <TextArea fx:id="textResult" editable="false" prefHeight="70.0" prefWidth="351.0" />
+            <Label text="Stato:" textFill="#fcf9f9">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </Label>
+            <Label fx:id="textStato" text="Benvenuto(a)" textFill="#09e31b">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </Label>
          </children>
       </HBox>
    </bottom>
+   <effect>
+      <Lighting>
+         <bumpInput>
+            <Shadow />
+         </bumpInput>
+         <light>
+            <Light.Distant />
+         </light>
+      </Lighting>
+   </effect>
 </BorderPane>
