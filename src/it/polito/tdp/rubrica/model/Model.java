@@ -1,7 +1,11 @@
 package it.polito.tdp.rubrica.model;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.TreeMap;
 
 /**
  * Rappresenta un insieme degli elementi {@link Voce} per poter gestire la rubrica
@@ -11,13 +15,22 @@ import java.util.List;
  */
 
 public class Model {
+	
 	private List<Voce>voci;
+	private String[] isoCountries;
+	private List<String>countries;
+	private Map<String, String>ctpp;
+	//private CountryToPhonePrefix ctpp;
 	
 	
 	
 	
 	public Model(){
 		this.voci= new ArrayList<>();
+		this.isoCountries=Locale.getISOCountries();
+		ctpp= CountryToPhonePrefix.getAll();
+		
+		
 	}
 	
 	/**
@@ -81,6 +94,7 @@ public class Model {
 	private Voce binarySearch (String nome, int size){
 		int inizio =0;
 		int fine = voci.size();
+		Collections.sort(voci);
 		
 		while(inizio!=fine){
 			int medio = inizio+(fine-inizio)/2;
@@ -105,6 +119,20 @@ public class Model {
 		
 	}
 	
-	
-	
+	public Map<String, String>getAllCountries(){
+		Map<String, String>countries=new TreeMap<>();
+		for(String countryCode : this.isoCountries){
+			if(ctpp.containsKey(countryCode)){
+				Locale obj = new Locale("", countryCode);
+				countries.put(obj.getDisplayCountry(), ctpp.get(countryCode));
+			}
+		}
+		
+		
+		
+		return countries;
+	}
+	public List<Voce>getAllVoce(){
+		return this.voci;
+	}
 }
